@@ -8,7 +8,7 @@
         {% for order in orders %}
             <li class="list-group-item mb-3">
                 <h5>Order ID: {{ order.id }}</h5>
-                <p><strong>Customer Name:</strong> {{ order.customer.name }}</p>
+                <p><strong>Customer Name:</strong> {{ order.customer }}</p>
                 <p><strong>Address:</strong> {{ order.customer.address }}</p>
                 <p><strong>Date:</strong> {{ order.order_date|date:"d M Y H:i" }}</p>
                 <p><strong>Total Price:</strong> {{ order.total_price }} ฿</p>
