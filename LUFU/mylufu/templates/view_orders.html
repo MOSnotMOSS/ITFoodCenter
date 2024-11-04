@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block title %}Orders for {{ branch.name }}{% endblock %}
+{% block content %}
+<div class="container mt-4">
+    <h1 class="mb-4">Orders for {{ branch.name }}</h1>
+    <ul class="list-group">
+        {% for order in orders %}
+            <li class="list-group-item mb-3">
+                <h5>Order ID: {{ order.id }}</h5>
+                <p><strong>Customer Name:</strong> {{ order.customer.name }}</p>
+                <p><strong>Address:</strong> {{ order.customer.address }}</p>
+                <p><strong>Date:</strong> {{ order.order_date|date:"d M Y H:i" }}</p>
+                <p><strong>Total Price:</strong> {{ order.total_price }} ฿</p>
+                <h6>Menu Items:</h6>
+                <ul class="list-group">
+                    {% for menu_item in order.menu_items.all %}
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <span>{{ menu_item.name }}</span>
+                            <span>{{ menu_item.price }} ฿</span>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </li>
+        {% empty %}
+            <li class="list-group-item">No orders found for this branch.</li>
+        {% endfor %}
+    </ul>
+    <a href="{% url 'branch_list' %}" class="btn btn-secondary mt-4">Back to Branch List</a>
+</div>
+{% endblock %}

@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block title %}Order Summary{% endblock %}
+
+{% block content %}
+<div class="mt-4">
+    <h1>Order Summary</h1>
+    <h2>{{ branch.name }}</h2>
+
+    <ul class="list-group">
+        {% for menu, quantity, item_total in order_items %}
+            <li class="list-group-item">
+                {{ menu.name }} - 
+                <span style="color: black; font-weight: bold;">{{ menu.price }} ฿</span> 
+                x {{ quantity }} = 
+                <span style="color: black; font-weight: bold;">{{ item_total|floatformat:2 }} ฿</span>
+            </li>
+        {% empty %}
+            <li class="list-group-item">No items ordered.</li>
+        {% endfor %}
+    </ul>
+
+    <h3 class="mt-4">Total: <span style="color: black; font-weight: bold;">{{ total_price|floatformat:2 }} ฿</span></h3>
+
+    <form method="post" action="{% url 'order_summary' branch.id %}">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-primary mt-4">Confirm Order</button>
+    </form>
+
+    <a href="{% url 'branch_menu' branch.id %}" class="btn btn-secondary mt-4">Back to Menu</a>
+</div>
+{% endblock %}

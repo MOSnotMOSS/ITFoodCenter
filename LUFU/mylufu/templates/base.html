@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Title{% endblock %}</title>
+    {% load bootstrap5 %}
+    {% bootstrap_css %}
+    {% bootstrap_javascript %}
+    <style>
+        body {
+            background-color: #d1bee2; /* Light background for the whole page */
+        }
+        nav {
+            background-color: #6f7cf1; /* Darker background for the navbar */
+        }
+        .navbar-brand {
+            font-weight: bold;
+            font-size: 1.5rem;
+        }
+        .nav-link {
+            transition: color 0.3s;
+        }
+        .nav-link:hover {
+            color: #ffc107; /* Change color on hover */
+        }
+        .container {
+            margin-top: 20px;
+            background-color: white; /* White background for the content */
+            border-radius: 8px; /* Rounded corners */
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+            padding: 20px; /* Padding inside the container */
+        }
+        .btn-info {
+            background-color: #17a2b8; /* Customize button color */
+        }
+        .btn-info:hover {
+            background-color: #138496; /* Darker on hover */
+        }
+        .text-light {
+            color: rgba(255, 255, 255, 0.8);
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light p-3">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="{% url 'branch_list' %}">
+                LUFU
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            {% if perms.mylufu.view_order %}
+            <a href="{% url 'revenue_report' %}" class="btn btn-info ms-2">Report</a>
+            {% endif %}
+
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    {% if user.is_authenticated %}
+                        <li class="nav-item">
+                            <p class="nav-link text-light"> Welcome, {{ user.username }}</p>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-light" href="{% url 'logout' %}"><b>Logout</b></a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container py-4">
+        {% block content %}
+            <div class=""></div>
+        {% endblock %}
+    </div>
+</body>
+</html>

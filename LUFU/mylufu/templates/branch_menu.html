@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ branch.name }} - Menu{% endblock %}
+{% block content %}
+<div class="container mt-4">
+    <h1 class="mb-4">{{ branch.name }} - Menu</h1>
+    <p><strong>Address:</strong> {{ branch.address }}</p>
+    <p><strong>Phone:</strong> {{ branch.phone }}</p>
+
+    <h2 class="mt-4">Menu</h2>
+    <form method="POST" action="{% url 'branch_menu' branch.id %}">
+        {% csrf_token %}
+        <ul class="list-group">
+            {% for menu in menus %}
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <div>
+                        <strong>{{ menu.name }}</strong> - {{ menu.category.name }} 
+                        <span class="text-dark fw-bold">{{ menu.price }} ฿</span>
+                    </div>
+                    <div>
+                        {% if perms.mylufu.add_order %}
+                        <button type="button" class="btn btn-outline-secondary" onclick="updateQuantity('{{ menu.id }}', -1)">-</button>
+                        <input type="number" name="quantity_{{ menu.id }}" id="quantity_{{ menu.id }}" value="0" min="0" class="quantity-input mx-2" readonly>
+                        <input type="hidden" id="hidden_quantity_{{ menu.id }}" name="hidden_quantity_{{ menu.id }}" value="0">
+                        <button type="button" class="btn btn-outline-secondary" onclick="updateQuantity('{{ menu.id }}', 1)">+</button>
+                        {% endif %}
+                        {% if perms.mylufu.change_menu %}
+                        <a href="{% url 'edit_menu' menu.id %}" class="btn btn-warning ms-2">Edit</a>
+                        {% endif %}
+                        {% if perms.mylufu.delete_menu %}
+                        <button class="btn sm btn-danger m-2">
+                            <a href="{% url 'delete_menu' menu.id %}" style="text-decoration: none; color:antiquewhite">Delete</a>
+                        </button>
+                        {% endif %}
+                    </div>
+                </li>
+            {% empty %}
+                <li class="list-group-item">No menu items available for this branch.</li>
+            {% endfor %}
+        </ul>
+        {% if perms.mylufu.add_order %}
+        <button type="submit" class="btn btn-primary mt-4">Order Selected</button>
+        {% endif %}
+    </form>
+    {% if perms.mylufu.add_menu %}
+    <a href="{% url 'add_menu' branch.id %}" class="btn btn-success mt-4">Add Menu</a>
+    {% endif %}
+    <a href="{% url 'branch_list' %}" class="btn btn-secondary mt-4">Back to branch list</a>
+</div>
+
+<script>
+    function updateQuantity(menuId, change) {
+        const input = document.getElementById(`quantity_${menuId}`);
+        const currentValue = parseInt(input.value);
+        const newValue = Math.max(0, currentValue + change);
+        input.value = newValue;
+
+        // Update the hidden input as well
+        const hiddenInput = document.getElementById(`hidden_quantity_${menuId}`);
+        if (hiddenInput) {
+            hiddenInput.value = newValue;
+        }
+    }
+</script>
+{% endblock %}
